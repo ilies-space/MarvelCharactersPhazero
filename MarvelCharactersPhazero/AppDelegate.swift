@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window = UIWindow(frame: UIScreen.main.bounds)
             let navigationController = UINavigationController(rootViewController: CharacterListViewController())
             window?.rootViewController = navigationController
-            window?.backgroundColor = .white // Set background color for window to confirm it is working
+            window?.backgroundColor = .white
             window?.makeKeyAndVisible()
         }
         return true

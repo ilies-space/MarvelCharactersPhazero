@@ -57,6 +57,7 @@ class MarvelAPIService {
                 // Parse the JSON response into MarvelDataWrapper
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(MarvelDataWrapper.self, from: data)
+                print(response)
                 let characters = response.data?.results
                 print("Fetched \(characters?.count ?? 0) characters")
                 completion(characters)

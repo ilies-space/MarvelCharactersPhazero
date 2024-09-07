@@ -52,15 +52,29 @@ class CharacterCell: UITableViewCell {
     func configure(with character: Character) {
         characterNameLabel.text = character.name
         characterIdLabel.text = "ID: \(character.id)"
-//        if let url = URL(string: "\(character.thumbnail.path).\(character.thumbnail.extension)") {
-//            // Load the image asynchronously
-//            URLSession.shared.dataTask(with: url) { data, response, error in
-//                if let data = data {
-//                    DispatchQueue.main.async {
-//                        self.characterImageView.image = UIImage(data: data)
-//                    }
-//                }
-//            }.resume()
-//        }
+        
+        // Construct image URL
+        let imageURLString = "\(character.thumbnail.path).\(character.thumbnail.extension)"
+        
+        // Check if URL is valid
+        if let url = URL(string: imageURLString) {
+            // Load the image asynchronously
+            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+                if let data = data, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.characterImageView.image = image
+                    }
+                } else {
+                    // Handle image loading failure by setting a placeholder
+                    DispatchQueue.main.async {
+                        self?.characterImageView.image = UIImage(named: "placeholder") 
+                    }
+                }
+            }.resume()
+        } else {
+            // Handle invalid URL by setting a placeholder
+            characterImageView.image = UIImage(named: "placeholder")
+            
+        }
     }
 }

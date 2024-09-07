@@ -11,12 +11,12 @@ import UIKit
 class CharacterListViewController: UIViewController {
     private let viewModel = CharacterListViewModel()
     private let tableView = UITableView()
-    private let activityIndicator = UIActivityIndicatorView(style: .large) // Create the activity indicator
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
-        setupActivityIndicator() // Setup activity indicator
+        setupActivityIndicator()
         fetchData()
     }
     
@@ -36,7 +36,7 @@ class CharacterListViewController: UIViewController {
     private func fetchData() {
         activityIndicator.startAnimating() // Start animating the activity indicator
         viewModel.fetchCharacters { [weak self] in
-            DispatchQueue.main.async { // Make sure to update UI on the main thread
+            DispatchQueue.main.async {
                 self?.activityIndicator.stopAnimating() // Stop animating the activity indicator
                 self?.tableView.reloadData()
             }
