@@ -12,9 +12,27 @@ struct Character: Codable {
     let name: String
     let description: String
     let thumbnail: Thumbnail
+    let comics: Comics
+    let urls: [URLInfo]
 
     struct Thumbnail: Codable {
-        let path: String
-        let `extension`: String
+        let path: String?
+        let `extension`: String?
+    }
+
+    struct Comics: Codable {
+        let items: [Comic]
+    }
+
+    struct Comic: Codable {
+        let name: String
+        let resourceURI: String?
+    }
+
+    struct URLInfo: Codable {
+        let type: String
+        let url: String
     }
 }
+
+

@@ -50,8 +50,22 @@ extension CharacterListViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CharacterCell", for: indexPath) as! CharacterCell
-        cell.configure(with: viewModel.characters[indexPath.row])
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "CharacterCell", for: indexPath) as? CharacterCell else {
+            return UITableViewCell()
+        }
+
+        let character = viewModel.characters[indexPath.row]
+        cell.configure(with: character)
+
+        // Open detail view on selection
+        cell.onWikiButtonTap = {
+            if let wikiURL = character.urls.first(where: { $0.type == "wiki" })?.url {
+                if let url = URL(string: wikiURL) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
+
         return cell
     }
     
