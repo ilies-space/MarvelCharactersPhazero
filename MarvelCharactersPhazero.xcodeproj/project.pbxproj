@@ -22,6 +22,7 @@
 		6A13CF4E2C8B451900038755 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13CF4D2C8B451900038755 /* AppCoordinator.swift */; };
 		6A13CF512C8B452C00038755 /* MarvelAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13CF502C8B452C00038755 /* MarvelAPIService.swift */; };
 		6A13CF762C8D384400038755 /* ApiResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13CF752C8D384300038755 /* ApiResponseModel.swift */; };
+		6A13CF782C8D45DC00038755 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 6A13CF772C8D45DC00038755 /* Config.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		6A13CF4D2C8B451900038755 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		6A13CF502C8B452C00038755 /* MarvelAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPIService.swift; sourceTree = "<group>"; };
 		6A13CF752C8D384300038755 /* ApiResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponseModel.swift; sourceTree = "<group>"; };
+		6A13CF772C8D45DC00038755 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 		6A13CF162C88C5BF00038755 = {
 			isa = PBXGroup;
 			children = (
+				6A13CF772C8D45DC00038755 /* Config.xcconfig */,
 				6A13CF212C88C5BF00038755 /* MarvelCharactersPhazero */,
 				6A13CF202C88C5BF00038755 /* Products */,
 			);
@@ -192,6 +195,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A13CF782C8D45DC00038755 /* Config.xcconfig in Resources */,
 				6A13CF2F2C88C5C100038755 /* LaunchScreen.storyboard in Resources */,
 				6A13CF2C2C88C5C100038755 /* Assets.xcassets in Resources */,
 				6A13CF2A2C88C5BF00038755 /* Main.storyboard in Resources */,
@@ -244,6 +248,7 @@
 /* Begin XCBuildConfiguration section */
 		6A13CF312C88C5C100038755 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A13CF772C8D45DC00038755 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -304,6 +309,7 @@
 		};
 		6A13CF322C88C5C100038755 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A13CF772C8D45DC00038755 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -358,6 +364,7 @@
 		};
 		6A13CF342C88C5C100038755 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A13CF772C8D45DC00038755 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -386,6 +393,7 @@
 		};
 		6A13CF352C88C5C100038755 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6A13CF772C8D45DC00038755 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

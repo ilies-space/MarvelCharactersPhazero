@@ -1,4 +1,3 @@
-//
 //  CharacterListViewController.swift
 //  MarvelCharactersPhazero
 //
@@ -158,7 +157,6 @@ class CharacterListViewController: UIViewController {
             }
         }
     }
-    
 
     private func fetchMoreData() {
         guard !isFetchingMore else { return }
@@ -174,7 +172,21 @@ class CharacterListViewController: UIViewController {
     }
     
     private func showErrorAlert(error: Error) {
-        let alertController = UIAlertController(title: "Error", message: "Failed to load characters. Please try again later.", preferredStyle: .alert)
+        let errorMessage: String
+        if let networkError = error as? NetworkError {
+            switch networkError {
+            case .missingAPIKeys:
+                errorMessage = "API keys are missing. Please check your configuration."
+            case .invalidURL:
+                errorMessage = "The URL is invalid."
+            case .noData:
+                errorMessage = "No data returned from the server."
+            }
+        } else {
+            errorMessage = "An unexpected error occurred: \(error.localizedDescription)"
+        }
+
+        let alertController = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
         present(alertController, animated: true)
     }
