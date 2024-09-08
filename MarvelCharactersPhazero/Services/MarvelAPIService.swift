@@ -8,16 +8,26 @@
 import Foundation
 import CryptoKit
 
-class MarvelAPIService {
+// Define a protocol for the API service
+protocol APIService {
+    func fetchCharacters(offset: Int, limit: Int, completion: @escaping (Result<[Character], Error>) -> Void)
+}
+
+class MarvelAPIService: APIService {
     static let shared = MarvelAPIService()
     
-    // API keys
-    private let publicKey = "a427215652ac7b01730e27689629133b"
-    private let privateKey = "522d5aba40d008e1c916f0a2767925011bdb7e0c"
     private let baseURL = "https://gateway.marvel.com/v1/public/characters"
     
+    // API keys
+    // TODO: Use more secure way to store API key using Environment Variable or Keychain
+
+    private let publicKey = "a427215652ac7b01730e27689629133b"
+    private let privateKey = "522d5aba40d008e1c916f0a2767925011bdb7e0c"
+    
     // Timestamp for hash generation
-    private let timestamp = "\(Int(Date().timeIntervalSince1970))"
+    private var timestamp: String {
+        return "\(Int(Date().timeIntervalSince1970))"
+    }
     
     // Hash for Marvel API authentication (md5 of timestamp + privateKey + publicKey)
     private var hash: String {
@@ -27,7 +37,7 @@ class MarvelAPIService {
             .joined()
     }
     
-    func fetchCharacters(offset: Int, limit: Int = 10, completion: @escaping ([Character]?) -> Void) {
+    func fetchCharacters(offset: Int, limit: Int = 10, completion: @escaping (Result<[Character], Error>) -> Void) {
         print("Calling fetchCharacters with offset: \(offset)")
         
         // Construct the full URL with the necessary parameters
@@ -35,7 +45,7 @@ class MarvelAPIService {
         
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
-            completion(nil)
+            completion(.failure(NetworkError.invalidURL))
             return
         }
         
@@ -43,13 +53,13 @@ class MarvelAPIService {
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("Error fetching characters: \(error)")
-                completion(nil)
+                completion(.failure(error))
                 return
             }
             
             guard let data = data else {
                 print("No data returned")
-                completion(nil)
+                completion(.failure(NetworkError.noData))
                 return
             }
             
@@ -57,31 +67,19 @@ class MarvelAPIService {
                 // Parse the JSON response into MarvelDataWrapper
                 let decoder = JSONDecoder()
                 let response = try decoder.decode(MarvelDataWrapper.self, from: data)
-                let characters = response.data?.results
-                print("Fetched \(characters?.count ?? 0) characters")
-                completion(characters)
+                let characters = response.data?.results ?? []
+                print("Fetched \(characters.count) characters")
+                completion(.success(characters))
             } catch {
                 print("Error decoding data: \(error)")
-                completion(nil)
+                completion(.failure(error))
             }
         }.resume()
     }
 }
 
-
-// MARK: - Models for API Response
-
-struct MarvelDataWrapper: Codable {
-    let code: Int?
-    let status: String?
-    let data: MarvelCharacterDataContainer?
+// Define error types for network errors
+enum NetworkError: Error {
+    case invalidURL
+    case noData
 }
-
-struct MarvelCharacterDataContainer: Codable {
-    let offset: Int?
-    let limit: Int?
-    let total: Int?
-    let count: Int?
-    let results: [Character]?
-}
-

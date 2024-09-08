@@ -21,6 +21,7 @@
 		6A13CF4B2C8B450300038755 /* CharacterDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13CF4A2C8B450300038755 /* CharacterDetailViewModel.swift */; };
 		6A13CF4E2C8B451900038755 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13CF4D2C8B451900038755 /* AppCoordinator.swift */; };
 		6A13CF512C8B452C00038755 /* MarvelAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13CF502C8B452C00038755 /* MarvelAPIService.swift */; };
+		6A13CF762C8D384400038755 /* ApiResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A13CF752C8D384300038755 /* ApiResponseModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		6A13CF4A2C8B450300038755 /* CharacterDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterDetailViewModel.swift; sourceTree = "<group>"; };
 		6A13CF4D2C8B451900038755 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		6A13CF502C8B452C00038755 /* MarvelAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarvelAPIService.swift; sourceTree = "<group>"; };
+		6A13CF752C8D384300038755 /* ApiResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponseModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				6A13CF3E2C8B442D00038755 /* Character.swift */,
+				6A13CF752C8D384300038755 /* ApiResponseModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				6A13CF512C8B452C00038755 /* MarvelAPIService.swift in Sources */,
 				6A13CF252C88C5BF00038755 /* SceneDelegate.swift in Sources */,
 				6A13CF3F2C8B442D00038755 /* Character.swift in Sources */,
+				6A13CF762C8D384400038755 /* ApiResponseModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

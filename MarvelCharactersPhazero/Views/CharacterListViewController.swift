@@ -41,6 +41,7 @@ class CharacterListViewController: UIViewController {
         setupCollectionView()
         setupActivityIndicator()
         setupLoadingMoreView()
+        setupViewModel()
         fetchData()
     }
 
@@ -127,6 +128,24 @@ class CharacterListViewController: UIViewController {
             loadingMoreView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
+    
+    private func setupViewModel() {
+        viewModel.onCharactersFetched = { [weak self] in
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
+                self?.loadingLabel.isHidden = true
+                self?.collectionView.reloadData()
+            }
+        }
+        
+        viewModel.onError = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.activityIndicator.stopAnimating()
+                self?.loadingLabel.isHidden = true
+                self?.showErrorAlert(error: error)
+            }
+        }
+    }
 
     private func fetchData() {
         activityIndicator.startAnimating()
@@ -139,6 +158,7 @@ class CharacterListViewController: UIViewController {
             }
         }
     }
+    
 
     private func fetchMoreData() {
         guard !isFetchingMore else { return }
@@ -151,6 +171,12 @@ class CharacterListViewController: UIViewController {
                 self?.collectionView.reloadData()
             }
         }
+    }
+    
+    private func showErrorAlert(error: Error) {
+        let alertController = UIAlertController(title: "Error", message: "Failed to load characters. Please try again later.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alertController, animated: true)
     }
 }
 
