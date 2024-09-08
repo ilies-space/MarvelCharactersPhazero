@@ -31,7 +31,7 @@ class MarvelAPIService {
         print("Calling fetchCharacters")
         
         // Construct the full URL with the necessary parameters
-        let urlString = "\(baseURL)?ts=\(timestamp)&apikey=\(publicKey)&hash=\(hash)&limit=5"
+        let urlString = "\(baseURL)?ts=\(timestamp)&apikey=\(publicKey)&hash=\(hash)&limit=10"
         
         guard let url = URL(string: urlString) else {
             print("Invalid URL")

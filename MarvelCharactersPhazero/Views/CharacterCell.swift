@@ -7,67 +7,90 @@
 
 import UIKit
 
-class CharacterCell: UITableViewCell {
+class CharacterCell: UICollectionViewCell {
     private let characterImageView = UIImageView()
     private let characterNameLabel = UILabel()
-    private let characterIdLabel = UILabel()
     private let wikiButton = UIButton(type: .system)
-
+    
     var onWikiButtonTap: (() -> Void)?
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupViews()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     private func setupViews() {
         characterImageView.translatesAutoresizingMaskIntoConstraints = false
         characterNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        characterIdLabel.translatesAutoresizingMaskIntoConstraints = false
         wikiButton.translatesAutoresizingMaskIntoConstraints = false
 
-        wikiButton.setTitle("Open Wiki", for: .normal)
+        characterImageView.contentMode = .scaleAspectFill
+        characterImageView.clipsToBounds = true
+        characterImageView.layer.cornerRadius = 8
+        
+        characterNameLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        characterNameLabel.textAlignment = .center
+        characterNameLabel.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        characterNameLabel.textColor = .white
+        characterNameLabel.layer.cornerRadius = 4
+        characterNameLabel.clipsToBounds = true
+        
+        wikiButton.setImage(UIImage(systemName: "info.circle"), for: .normal)
+        wikiButton.tintColor = .white
         wikiButton.addTarget(self, action: #selector(wikiButtonTapped), for: .touchUpInside)
+        
+        // Adding background color and shadow to the wikiButton
+        wikiButton.backgroundColor = UIColor.black.withAlphaComponent(0.6)
+        wikiButton.layer.cornerRadius = 12
+        wikiButton.layer.shadowColor = UIColor.black.cgColor
+        wikiButton.layer.shadowOpacity = 0.5
+        wikiButton.layer.shadowOffset = CGSize(width: 0, height: 2)
+        wikiButton.layer.shadowRadius = 4
+        wikiButton.layer.masksToBounds = false
+        
+        contentView.backgroundColor = .white
+        contentView.layer.cornerRadius = 12
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOpacity = 0.1
+        contentView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        contentView.layer.shadowRadius = 4
 
         contentView.addSubview(characterImageView)
         contentView.addSubview(characterNameLabel)
-        contentView.addSubview(characterIdLabel)
         contentView.addSubview(wikiButton)
 
         NSLayoutConstraint.activate([
-            characterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            characterImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            characterImageView.widthAnchor.constraint(equalToConstant: 60),
-            characterImageView.heightAnchor.constraint(equalToConstant: 60),
+            // Full size image view
+            characterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            characterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            characterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            characterImageView.heightAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 1.5), // Aspect ratio 2:3
             
-            characterNameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            characterNameLabel.leadingAnchor.constraint(equalTo: characterImageView.trailingAnchor, constant: 12),
-            characterNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            // Name label at the bottom of the image view
+            characterNameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            characterNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            characterNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            characterNameLabel.heightAnchor.constraint(equalToConstant: 24),
 
-            characterIdLabel.topAnchor.constraint(equalTo: characterNameLabel.bottomAnchor, constant: 4),
-            characterIdLabel.leadingAnchor.constraint(equalTo: characterNameLabel.leadingAnchor),
-            characterIdLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-
-            wikiButton.topAnchor.constraint(equalTo: characterIdLabel.bottomAnchor, constant: 4),
-            wikiButton.leadingAnchor.constraint(equalTo: characterNameLabel.leadingAnchor),
+            // Info button at the top-right corner of the image view
+            wikiButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             wikiButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            wikiButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            wikiButton.widthAnchor.constraint(equalToConstant: 36),
+            wikiButton.heightAnchor.constraint(equalToConstant: 36)
         ])
     }
-
-
+    
     @objc private func wikiButtonTapped() {
         onWikiButtonTap?()
     }
-
+    
     func configure(with character: Character) {
-        characterNameLabel.text = character.name
-        characterIdLabel.text = "ID: \(character.id)"
-        
+        characterNameLabel.text = "\(character.name) (ID: \(character.id))"
+
         if let path = character.thumbnail.path, let ext = character.thumbnail.extension {
             let urlString = "\(path).\(ext)"
             if let url = URL(string: urlString) {
@@ -80,7 +103,7 @@ class CharacterCell: UITableViewCell {
                 }.resume()
             }
         }
-
+        
         if let wikiURL = character.urls.first(where: { $0.type == "wiki" })?.url {
             wikiButton.isHidden = false
             onWikiButtonTap = { UIApplication.shared.open(URL(string: wikiURL)!) }
