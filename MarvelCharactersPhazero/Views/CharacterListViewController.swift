@@ -12,6 +12,10 @@ class CharacterListViewController: UIViewController {
     private let collectionView: UICollectionView
     private let activityIndicator = UIActivityIndicatorView(style: .large)
     private let loadingLabel = UILabel()
+    private let loadingMoreView = UIActivityIndicatorView(style: .large)
+
+    private var isFetchingMore = false
+    private let threshold = 5 // Number of items from the bottom to trigger fetching more
 
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -36,6 +40,7 @@ class CharacterListViewController: UIViewController {
         setupTitleLabel()
         setupCollectionView()
         setupActivityIndicator()
+        setupLoadingMoreView()
         fetchData()
     }
 
@@ -46,7 +51,7 @@ class CharacterListViewController: UIViewController {
         view.addSubview(logoImageView)
         
         NSLayoutConstraint.activate([
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 4),
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImageView.heightAnchor.constraint(equalToConstant: 40),
             logoImageView.widthAnchor.constraint(equalToConstant: 100)
@@ -61,8 +66,6 @@ class CharacterListViewController: UIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(titleLabel)
         
-
-        
         let spacer = UIView()
         spacer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(spacer)
@@ -73,8 +76,6 @@ class CharacterListViewController: UIViewController {
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])
-        
-
     }
 
     private func setupCollectionView() {
@@ -115,6 +116,18 @@ class CharacterListViewController: UIViewController {
         ])
     }
 
+    private func setupLoadingMoreView() {
+        loadingMoreView.translatesAutoresizingMaskIntoConstraints = false
+        loadingMoreView.color = .white
+        loadingMoreView.hidesWhenStopped = true
+        view.addSubview(loadingMoreView)
+        
+        NSLayoutConstraint.activate([
+            loadingMoreView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingMoreView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+        ])
+    }
+
     private func fetchData() {
         activityIndicator.startAnimating()
         loadingLabel.isHidden = false
@@ -126,9 +139,22 @@ class CharacterListViewController: UIViewController {
             }
         }
     }
+
+    private func fetchMoreData() {
+        guard !isFetchingMore else { return }
+        isFetchingMore = true
+        loadingMoreView.startAnimating()
+        viewModel.fetchCharacters { [weak self] in
+            DispatchQueue.main.async {
+                self?.loadingMoreView.stopAnimating()
+                self?.isFetchingMore = false
+                self?.collectionView.reloadData()
+            }
+        }
+    }
 }
 
-extension CharacterListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension CharacterListViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModel.characters.count
     }
@@ -156,5 +182,14 @@ extension CharacterListViewController: UICollectionViewDataSource, UICollectionV
         let character = viewModel.characters[indexPath.item]
         let detailVC = CharacterDetailViewController(character: character)
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let contentHeight = scrollView.contentSize.height
+        let scrollPosition = scrollView.contentOffset.y + scrollView.frame.size.height
+
+        if scrollPosition > contentHeight - CGFloat(threshold), !isFetchingMore {
+            fetchMoreData()
+        }
     }
 }

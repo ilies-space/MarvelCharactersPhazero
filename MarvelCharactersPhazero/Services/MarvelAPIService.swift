@@ -27,11 +27,11 @@ class MarvelAPIService {
             .joined()
     }
     
-    func fetchCharacters(completion: @escaping ([Character]?) -> Void) {
-        print("Calling fetchCharacters")
+    func fetchCharacters(offset: Int, limit: Int = 10, completion: @escaping ([Character]?) -> Void) {
+        print("Calling fetchCharacters with offset: \(offset)")
         
         // Construct the full URL with the necessary parameters
-        let urlString = "\(baseURL)?ts=\(timestamp)&apikey=\(publicKey)&hash=\(hash)&limit=10"
+        let urlString = "\(baseURL)?ts=\(timestamp)&apikey=\(publicKey)&hash=\(hash)&offset=\(offset)&limit=\(limit)"
         
         guard let url = URL(string: urlString) else {
             print("Invalid URL")
@@ -66,7 +66,6 @@ class MarvelAPIService {
             }
         }.resume()
     }
-    
 }
 
 

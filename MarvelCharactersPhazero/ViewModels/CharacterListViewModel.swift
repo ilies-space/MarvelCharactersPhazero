@@ -10,20 +10,27 @@ import Foundation
 class CharacterListViewModel {
     var characters: [Character] = []
     var onCharactersFetched: (() -> Void)?
+    private var currentOffset = 0
+    private let limit = 10
+    private var isFetching = false
     
     func fetchCharacters(completion: @escaping () -> Void = {}) {
-        MarvelAPIService.shared.fetchCharacters { [weak self] characters in
+        guard !isFetching else { return }
+        isFetching = true
+        
+        MarvelAPIService.shared.fetchCharacters(offset: currentOffset, limit: limit) { [weak self] fetchedCharacters in
             guard let self = self else { return }
             
-            if let fetchedCharacters = characters {
-                self.characters = fetchedCharacters
+            if let fetchedCharacters = fetchedCharacters {
+                self.characters.append(contentsOf: fetchedCharacters)
+                self.currentOffset += self.limit
                 self.onCharactersFetched?()
             } else {
                 print("No characters found")
             }
-            completion() 
+            
+            self.isFetching = false
+            completion()
         }
     }
 }
-
-
