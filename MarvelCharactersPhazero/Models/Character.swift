@@ -27,6 +27,7 @@ struct Character: Codable {
     struct Comic: Codable {
         let name: String
         let resourceURI: String?
+        let thumbnail: Thumbnail?
     }
 
     struct URLInfo: Codable {
@@ -34,5 +35,3 @@ struct Character: Codable {
         let url: String
     }
 }
-
-
